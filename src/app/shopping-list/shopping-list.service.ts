@@ -10,18 +10,37 @@ export class ShoppingListService{
     ];
 
     ingredientUpdated = new Subject<Ingredient[]>();
+    startEditing = new Subject<number>();
     
     getIngredients(){
        return _.union(this.ingredients.slice());
     }
 
+    getIngredient(index){
+        return this.ingredients[index];
+    }
+
     onAddIngredients(ingredient: Ingredient){
         this.ingredients.push(ingredient);
-        this.ingredientUpdated.next(this.ingredients.slice());
+        this.getAllIngredient();
     }
 
     onGetIngredients(ingredients: Ingredient[]){
         this.ingredients.push(...ingredients);
+        this.getAllIngredient();
+    }
+
+    upDatedIngredient(index, newIngredient){
+        this.ingredients[index] = newIngredient;
+        this.getAllIngredient();
+    }
+
+    deleteIngredient(index){
+        this.ingredients.splice(index, 1);
+        this.getAllIngredient();
+    }
+
+    getAllIngredient(){
         this.ingredientUpdated.next(this.ingredients.slice());
     }
 }
