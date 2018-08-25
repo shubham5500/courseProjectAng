@@ -33,7 +33,7 @@ export class RecipeDetailComponent implements OnInit {
     // this.router.navigate([`${this.id != '0' ? `../${this.id - 1}` : '../'}`], {
     //   relativeTo: this.activatedRoute
     // })
-    this.router.navigate([`/recipes'}`], {
+    this.router.navigate([`/recipes`], {
       relativeTo: this.activatedRoute
     })
   }

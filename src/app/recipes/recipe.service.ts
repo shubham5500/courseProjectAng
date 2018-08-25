@@ -1,8 +1,13 @@
 import { Recipe } from "./recipe.model";
-import { EventEmitter, Injectable } from '@angular/core';
+import { Subject } from "rxjs/Subject";
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
+
+import 'rxjs/Rx';
 import { Ingredient } from "../shared/ingredient.model";
 import { ShoppingListService } from "../shopping-list/shopping-list.service";
-import { Subject } from "rxjs/Subject";
+
+
 
 @Injectable()
 
@@ -22,11 +27,18 @@ export class RecipeService{
                     [new Ingredient('Buns', 2), new Ingredient('Meat', 1)])
     ];
     
-    constructor(public slService: ShoppingListService){
+    constructor(public slService: ShoppingListService, 
+                private http: Http){
         
     }
     
     ngOnInit(): void {
+    }
+
+    setRecipe(recipes: Recipe[]){
+        this.recipes = recipes;
+        console.log(this.recipes)
+        this.recipeChanged.next(this.recipes.slice());
     }
 
     getRecipe(){
@@ -56,6 +68,34 @@ export class RecipeService{
         console.log('SERVICE SE', recipe)
         this.recipes[index] = recipe;
         this.recipeChanged.next(this.recipes.slice());
+    }
+
+    saveRecipes(){
+        return this.http.put('https://testingapp-3fb7a.firebaseio.com/recipes.json', this.getRecipe()).map(
+            (response)=>{
+                return response.json();
+            }
+        );
+    }
+
+    getRecipes(){
+        this.http.get('https://testingapp-3fb7a.firebaseio.com/recipes.json')
+        .map(
+            (response: Response)=>{
+                const recipes: Recipe[] = response.json();
+                for(let recipe of recipes){
+                    if(!recipe['ingredient']){
+                        recipe['ingredient'] = [];
+                    }
+                }
+                return recipes;
+            }
+        )
+        .subscribe(
+            (recipes: Recipe[])=>{
+                this.setRecipe(recipes);
+            }
+        )
     }
 
 }
