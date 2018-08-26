@@ -1,0 +1,25 @@
+<br>
+<form (ngSubmit)="onSignup(signUpFrom)" class="col-xs-6 col-xs-offset-3" #signUpFrom="ngForm">
+  <h3 class="text-center"><u>SignUp</u></h3><br><br>
+  <div class="form-group">
+    <label for="email">Mail</label>
+    <input type="text" 
+           class="form-control"
+           name="email"
+           id="email"
+           ngModel>
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" 
+           class="form-control"
+           name="password"
+           id="password"
+           ngModel>
+  </div>
+  <br>
+  <div class="form-group">
+    <button class="btn btn-primary"
+            type="submit">Signup</button>
+  </div>
+</form>

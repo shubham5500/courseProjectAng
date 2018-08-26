@@ -6,6 +6,7 @@ import { Http, Response } from '@angular/http';
 import 'rxjs/Rx';
 import { Ingredient } from "../shared/ingredient.model";
 import { ShoppingListService } from "../shopping-list/shopping-list.service";
+import { AuthService } from "../auth/auth.service";
 
 
 
@@ -28,7 +29,8 @@ export class RecipeService{
     ];
     
     constructor(public slService: ShoppingListService, 
-                private http: Http){
+                private http: Http,
+                private authService: AuthService){
         
     }
     
@@ -71,7 +73,9 @@ export class RecipeService{
     }
 
     saveRecipes(){
-        return this.http.put('https://testingapp-3fb7a.firebaseio.com/recipes.json', this.getRecipe()).map(
+        let token = this.authService.getToken();
+        console.log('token', token);
+        return this.http.put(`https://testingapp-3fb7a.firebaseio.com/recipes.json?auth=${token}`, this.getRecipe()).map(
             (response)=>{
                 return response.json();
             }
@@ -79,7 +83,8 @@ export class RecipeService{
     }
 
     getRecipes(){
-        this.http.get('https://testingapp-3fb7a.firebaseio.com/recipes.json')
+        let token = this.authService.getToken();
+        this.http.get(`https://testingapp-3fb7a.firebaseio.com/recipes.json?auth=${token}`)
         .map(
             (response: Response)=>{
                 const recipes: Recipe[] = response.json();

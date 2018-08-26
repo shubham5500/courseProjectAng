@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipe.model';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -17,7 +18,8 @@ export class RecipeListComponent implements OnInit {
 
   constructor(private recipeService: RecipeService,
               private router: Router,
-              private activatedRoute: ActivatedRoute) { }
+              private activatedRoute: ActivatedRoute,
+              private authService: AuthService) { }
 
   ngOnInit() {
     this.recipes = this.recipeService.getRecipe();
