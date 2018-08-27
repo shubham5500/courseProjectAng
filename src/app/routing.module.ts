@@ -1,62 +1,31 @@
-import { Routes,RouterModule } from "@angular/router";
-import { RecipesComponent } from "./recipes/recipes.component";
-import { ShoppingListComponent } from "./shopping-list/shopping-list.component";
+import { Routes,RouterModule, PreloadAllModules } from "@angular/router";
 import { NgModule } from "../../node_modules/@angular/core";
-import { RecipeDetailComponent } from "./recipes/recipe-detail/recipe-detail.component";
-import { RecipeStartComponent } from "./recipes/recipe-start/recipe-start.component";
-import { RecipesEditComponent } from "./recipes/recipes-edit/recipes-edit.component";
-import { SignupComponent } from "./auth/signup/signup.component";
-import { SigninComponent } from "./auth/signin/signin.component";
-import { AuthGuard } from "./auth/auth.guard";
+import { HomeComponent } from "./core/home/home.component";
 
 const appRoute: Routes = [
     {
         path: '',
-        redirectTo: '/recipes',
-        pathMatch: 'full'
+        // redirectTo: '/recipes',
+        // pathMatch: 'full',
+        component: HomeComponent
     },
     {
         path: 'recipes',
-        component: RecipesComponent,
-        children: [
-            {
-                path: '',
-                component: RecipeStartComponent
-            },
-            {
-                path: 'new',
-                component: RecipesEditComponent,
-                canActivate: [AuthGuard]
-            },
-            {
-                path: ':id',
-                component: RecipeDetailComponent
-            },
-            
-            {
-                path: ':id/edit',
-                component: RecipesEditComponent,
-                canActivate: [AuthGuard]
-            }
-        ]
+        loadChildren: './recipes/recipes.module#RecipesModule' 
+        //This above is lazy loading route, this module will be loaded whenever it is neccessary to be loaded and that is called lazy loading
     },
     {
         path: 'shopping-list',
-        component: ShoppingListComponent
-    },
-    {
-        path: 'signup',
-        component: SignupComponent
-    },
-    {
-        path: 'signin',
-        component: SigninComponent
+        loadChildren: './shopping-list/shopping-list.module#ShoppingListModule'
     }
 ];
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(appRoute) 
+        RouterModule.forRoot(appRoute, {
+            preloadingStrategy: PreloadAllModules 
+            // This above tells "preloadingStrategy: PreloadAllModules" the browser to preload all the lazy loaded routes while the user is browsing some other page it is for optimizing and boosting the performance of the app..
+        }) 
     ],
     exports: [
         RouterModule
